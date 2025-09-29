@@ -11,6 +11,11 @@ dotenv.config();
 app.use(express.json());
 app.use(cors());
 
+app.use(cors({
+  origin: 'https://frontend-rosy-sigma-77.vercel.app',
+  credentials: true, // if sending cookies/auth headers
+}));
+
 
 
 app.use('/api/v1/users',userRouter);
