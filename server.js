@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use(cors({
-  origin: 'https://invest-more-money.vercel.app/',
+  origin: 'https://invest-more-money.vercel.app',
   credentials: true, // if sending cookies/auth headers
 }));
 
