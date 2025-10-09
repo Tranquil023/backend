@@ -174,9 +174,26 @@ const getBankDetails = async (req, res) => {
     }
 };
 
+const addIncomeRecord = async (req,res) => {
+    const { user_id, amount, income_type, description } = req.body;
+    try {
+        const { data, error } = await supabase
+            .from('income_records')
+            .insert([{
+                user_id,
+                amount,
+                income_type,
+                description
+            }]);
+
+        if (error) return res.status(400).json({ error });
+
+        return res.status(200).json({ message: "Income record added successfully", data });
+    } catch (error) {
+        console.error('Error adding income record:', error);
+        return res.status(500).json({ error: error.message });
+    }
+};
 
 
-
-
-
-module.exports = { addIncome, rechargeWallet, investMoney, addBankAccount, getBankDetails };
+module.exports = { addIncome, rechargeWallet, investMoney, addBankAccount, getBankDetails, addIncomeRecord };
