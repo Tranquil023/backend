@@ -88,7 +88,7 @@ const withdrawMoney = async (req, res) => {
   }
 };
 
-const getWithdrawalsRecords = async (req,res) => {
+const getWithdrawalsRecords = async (req, res) => {
   try {
     const userId = req.user.id; 
     const { data, error } = await supabase
@@ -97,13 +97,13 @@ const getWithdrawalsRecords = async (req,res) => {
       .eq('user_id', userId);
 
     if (error) {
-      throw error;
+      return res.status(400).json({ message: 'Error fetching withdrawal records', error });
     }
 
-    return data;
+    return res.status(200).json({ message: 'Withdrawal records fetched successfully', data });
   } catch (error) {
     console.error('Error fetching withdrawal records:', error);
-    throw error;
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
@@ -116,13 +116,13 @@ const getIncomeRecords = async (req, res) => {
       .eq('user_id', userId);
 
     if (error) {
-      throw error;
+      return res.status(400).json({ message: 'Error fetching income records', error });
     }
 
-    return data;
+    return res.status(200).json({ message: 'Income records fetched successfully', data });
   } catch (error) {
     console.error('Error fetching income records:', error);
-    throw error;
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
