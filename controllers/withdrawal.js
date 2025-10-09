@@ -88,5 +88,42 @@ const withdrawMoney = async (req, res) => {
   }
 };
 
+const getWithdrawalsRecords = async (req,res) => {
+  try {
+    const userId = req.user.id; 
+    const { data, error } = await supabase
+      .from('withdrawals')
+      .select('*')
+      .eq('user_id', userId);
 
-module.exports = { withdrawMoney }
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching withdrawal records:', error);
+    throw error;
+  }
+};
+
+const getIncomeRecords = async (req, res) => {
+  try {
+    const userId = req.user.id; 
+    const { data, error } = await supabase
+      .from('income_records')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching income records:', error);
+    throw error;
+  }
+};
+
+module.exports = { withdrawMoney, getWithdrawalsRecords, getIncomeRecords };

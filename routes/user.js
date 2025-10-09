@@ -3,7 +3,7 @@ const { registerUser, loginUser} = require('../controllers/Auth');
 const { rechargeWallet, addIncome, investMoney, addBankAccount, getBankDetails } = require('../controllers/income');
 const { VerifyJWT } = require('../middleware/function');
 const { getUserdetails, updateBankDetails } = require('../controllers/users');
-const { withdrawMoney } = require('../controllers/withdrawal');
+const { withdrawMoney, getWithdrawalsRecords, getIncomeRecords } = require('../controllers/withdrawal');
 
 const router=express.Router();
 
@@ -18,6 +18,10 @@ router.post('/invest-money',VerifyJWT,investMoney);
 router.post('/withdraw',VerifyJWT,withdrawMoney)
 router.post('/add-bank', VerifyJWT, addBankAccount);
 router.get('/bank-details',VerifyJWT,getBankDetails);
+
+router.get('/withdraw-Records',VerifyJWT,getWithdrawalsRecords);
+router.get('/income-Records',VerifyJWT,getIncomeRecords);
+
 
 router.post('/update-bank-details', VerifyJWT, updateBankDetails);
 
