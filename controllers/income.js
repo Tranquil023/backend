@@ -28,14 +28,28 @@ const rechargeWallet = async (req, res) => {
     const { amount } = req.body;
     const user_id = req.user.id;
     try {
-        const { data, error } = await supabase
+        // Update user balance
+        const { data: userData, error: updateError } = await supabase
             .from('users')
             .update({ balance: supabase.raw('balance + ?', [amount]) })
-            .eq('user_id', user_id)
+            .eq('id', user_id)
             .select();
 
-        if (error) return res.status(400).json({ error });
-        return res.status(200).json({ message: "Wallet recharged", data });
+        if (updateError) return res.status(400).json({ error: updateError });
+
+        // Add details to income_records
+        const { data: incomeData, error: incomeError } = await supabase
+            .from('income_records')
+            .insert([{
+                user_id,
+                amount,
+                income_type: 'Wallet Recharge',
+                description: 'Wallet recharge via app'
+            }]);
+
+        if (incomeError) return res.status(400).json({ error: incomeError });
+
+        return res.status(200).json({ message: "Wallet recharged and income recorded", userData, incomeData });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -159,6 +173,7 @@ const getBankDetails = async (req, res) => {
         return res.status(500).json({ exists: false });
     }
 };
+
 
 
 
