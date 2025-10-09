@@ -11,9 +11,21 @@ dotenv.config();
 app.use(express.json());
 app.use(cors());
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://invest-more-money.vercel.app'
+];
+
 app.use(cors({
-  origin: 'https://frontend-rosy-sigma-77.vercel.app',
-  credentials: true, // if sending cookies/auth headers
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS: ' + origin));
+    }
+  },
+  credentials: true
 }));
 
 
