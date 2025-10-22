@@ -37,7 +37,7 @@ const rechargeWallet = async (req, res) => {
                     user_id,
                     amount,
                     status: 'pending',
-                    description: 'Wallet recharge request via app',
+                    description: 'Wallet recharge',
                 },
             ])
             .select()
@@ -120,7 +120,7 @@ const investMoney = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
-    
+
 const addBankAccount = async (req, res) => {
     try {
         const userId = req.user.id; // from VerifyJWT
