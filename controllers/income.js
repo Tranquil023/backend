@@ -28,28 +28,19 @@ const rechargeWallet = async (req, res) => {
     const { amount } = req.body;
     const user_id = req.user.id;
     try {
-        // Update user balance
-        const { data: userData, error: updateError } = await supabase
-            .from('users')
-            .update({ balance: supabase.raw('balance + ?', [amount]) })
-            .eq('id', user_id)
-            .select();
-
-        if (updateError) return res.status(400).json({ error: updateError });
-
-        // Add details to income_records
-        const { data: incomeData, error: incomeError } = await supabase
-            .from('income_records')
+        // Add details to recharge table with status as 'pending'
+        const { data: rechargeData, error: rechargeError } = await supabase
+            .from('recharge')
             .insert([{
                 user_id,
                 amount,
-                income_type: 'Wallet Recharge',
-                description: 'Wallet recharge via app'
+                status: 'pending',
+                description: 'Wallet recharge request via app'
             }]);
 
-        if (incomeError) return res.status(400).json({ error: incomeError });
+        if (rechargeError) return res.status(400).json({ error: rechargeError });
 
-        return res.status(200).json({ message: "Wallet recharged and income recorded", userData, incomeData });
+        return res.status(200).json({ message: "Recharge request added to recharge table", rechargeData });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
