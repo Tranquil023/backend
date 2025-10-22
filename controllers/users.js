@@ -53,4 +53,19 @@ const updateBankDetails = async (req, res) => {
   }
 };
 
-module.exports = {getUserdetails, generateReferLink, updateBankDetails};
+const RechargeRecords = async (req,res)=>{
+    try {
+        const userId = req.user.id;
+        const { data, error } = await supabase
+          .from('recharge')
+          .select('*')
+          .eq('user_id', userId);
+
+        if (error) throw error;
+        res.json({ message: 'Recharge records fetched', data });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+module.exports = {getUserdetails, generateReferLink, updateBankDetails, RechargeRecords};
