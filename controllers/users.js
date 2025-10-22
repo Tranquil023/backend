@@ -4,25 +4,25 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 
-const getUserdetails = async (req,res)=>{
-    try {
-        const userId = req.user.id;
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', userId)
-          .single();
+const getUserdetails = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-        if (error) throw error;
-        res.json({ message: 'User details fetched', data });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    if (error) throw error;
+    res.json({ message: 'User details fetched', data });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 }
 
 const generateReferLink = async (req, res) => {
@@ -53,19 +53,34 @@ const updateBankDetails = async (req, res) => {
   }
 };
 
-const RechargeRecords = async (req,res)=>{
-    try {
-        const userId = req.user.id;
-        const { data, error } = await supabase
-          .from('recharge')
-          .select('*')
-          .eq('user_id', userId);
+const RechargeRecords = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { data, error } = await supabase
+      .from('recharge')
+      .select('*')
+      .eq('user_id', userId);
 
-        if (error) throw error;
-        res.json({ message: 'Recharge records fetched', data });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    if (error) throw error;
+    res.json({ message: 'Recharge records fetched', data });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-module.exports = {getUserdetails, generateReferLink, updateBankDetails, RechargeRecords};
+const GetMyPlans = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { data, error } = await supabase
+      .from('investments')
+      .select('*')
+      .eq('user_id', userId);
+    if (error) throw error;
+    res.json({ message: 'User investment plans fetched', data });
+  }
+  catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { getUserdetails, generateReferLink, updateBankDetails, RechargeRecords, GetMyPlans };
