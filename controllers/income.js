@@ -52,7 +52,8 @@ const rechargeWallet = async (req, res) => {
                 {
                     user_id,
                     amount,
-                    source: 'Wallet Recharge',
+                    income_type: 'Recharge',
+                    description: 'Wallet recharge request via app',
                 },
             ])
             .select()
