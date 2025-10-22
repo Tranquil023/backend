@@ -13,7 +13,7 @@ router.post('/register/:refCode', registerUser);
 router.get('/me',VerifyJWT,getUserdetails);
 
 router.post('/recharge-wallet', VerifyJWT, rechargeWallet);
-router.post('/recharge-records', VerifyJWT, RechargeRecords);
+router.get('/recharge-records', VerifyJWT, RechargeRecords);
 
 router.post('/add-income', VerifyJWT, addIncome);
 router.post('/invest-money',VerifyJWT,investMoney);
