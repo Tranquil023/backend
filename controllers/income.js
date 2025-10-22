@@ -27,24 +27,50 @@ const addIncome = async (req, res) => {
 const rechargeWallet = async (req, res) => {
     const { amount } = req.body;
     const user_id = req.user.id;
+
     try {
-        // Add details to recharge table with status as 'pending'
+        // 1️⃣ Add details to recharge table with status 'pending'
         const { data: rechargeData, error: rechargeError } = await supabase
             .from('recharge')
-            .insert([{
-                user_id,
-                amount,
-                status: 'pending',
-                description: 'Wallet recharge request via app'
-            }]);
+            .insert([
+                {
+                    user_id,
+                    amount,
+                    status: 'pending',
+                    description: 'Wallet recharge request via app',
+                },
+            ])
+            .select()
+            .single();
 
         if (rechargeError) return res.status(400).json({ error: rechargeError });
 
-        return res.status(200).json({ message: "Recharge request added to recharge table", rechargeData });
+        // 2️⃣ Also insert into income_records table
+        const { data: incomeData, error: incomeError } = await supabase
+            .from('income_records')
+            .insert([
+                {
+                    user_id,
+                    amount,
+                    source: 'Wallet Recharge',
+                },
+            ])
+            .select()
+            .single();
+
+        if (incomeError) return res.status(400).json({ error: incomeError });
+
+        // 3️⃣ Return success response
+        return res.status(200).json({
+            message: "Recharge request added to recharge and income_records tables",
+            rechargeData,
+            incomeData,
+        });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 };
+
 
 const investMoney = async (req, res) => {
     try {
@@ -148,7 +174,7 @@ const getBankDetails = async (req, res) => {
             .from('bank_details')
             .select('*')
             .eq('user_id', userId)
-             // fetch only one bank account
+        // fetch only one bank account
 
         if (error) {
             return res.status(400).json(error);
@@ -165,7 +191,7 @@ const getBankDetails = async (req, res) => {
     }
 };
 
-const addIncomeRecord = async (req,res) => {
+const addIncomeRecord = async (req, res) => {
     const { user_id, amount, income_type, description } = req.body;
     try {
         const { data, error } = await supabase
