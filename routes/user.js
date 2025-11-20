@@ -9,7 +9,7 @@ const router=express.Router();
 
 
 router.post('/login',loginUser);
-router.post('/register/:refCode', registerUser);
+router.post('/register/:refCode?', registerUser);
 router.get('/me',VerifyJWT,getUserdetails);
 
 router.post('/recharge-wallet', VerifyJWT, rechargeWallet);
