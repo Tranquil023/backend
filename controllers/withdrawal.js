@@ -13,8 +13,13 @@ const withdrawMoney = async (req, res) => {
   try {
     const { amount } = req.body;
     const userId = req.user.id;
-    currentBalance = req.user;
-    console.log(currentBalance)
+    const currentBalance = req.user.withdrawal_balance;
+    const recharge_balance = req.user.recharge_balance;
+    console.log(req.user);
+
+    if (!amount) {
+      return res.status(400).json({ message: 'Amount is required' });
+    }
 
     const numericAmount = parseFloat(amount);
     if (isNaN(numericAmount) || numericAmount <= 0) {
@@ -56,20 +61,23 @@ const withdrawMoney = async (req, res) => {
     // 1. Fetch current balance
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('balance')
+      .select('withdrawal_balance')
       .eq('id', userId)
       .single();
 
     if (userError) {
       console.error('Fetch error:', userError);
     } else {
-      const currentBalance = user.balance;
+      const currentBalance = user.withdrawal_balance;
       const newBalance = currentBalance - amount;
+      const balance = req.user.balance-amount || 0;
 
       // 2. Update balance
       const { error: updateError } = await supabase
         .from('users')
-        .update({ balance: newBalance })
+        .update({ withdrawal_balance: newBalance,
+          // balance:balance
+         })
         .eq('id', userId);
 
       if (updateError) {

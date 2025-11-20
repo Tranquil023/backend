@@ -71,7 +71,7 @@ const investMoney = async (req, res) => {
         // 1️⃣ Fetch user balance
         const { data: userData, error: userError } = await supabase
             .from('users')
-            .select('balance')
+            .select('recharge_balance')
             .eq('id', userId)
             .single();
 
@@ -79,7 +79,7 @@ const investMoney = async (req, res) => {
             return res.status(400).json({ message: 'User not found or error fetching balance', userError });
         }
 
-        const currentBalance = userData.balance;
+        const currentBalance = userData.recharge_balance;
 
         // 2️⃣ Check balance
         if (currentBalance < numericAmount) {
@@ -89,7 +89,7 @@ const investMoney = async (req, res) => {
         // 3️⃣ Deduct amount from balance
         const { error: updateError } = await supabase
             .from('users')
-            .update({ balance: currentBalance - numericAmount })
+            .update({ recharge_balance: currentBalance - numericAmount })
             .eq('id', userId);
 
         if (updateError) {
