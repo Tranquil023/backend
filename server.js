@@ -13,6 +13,7 @@ app.use(cors());
 
 const allowedOrigins = [
   'http://localhost:5173',
+  'https://stackofficial.vercel.app'
   'https://invest-more-money.vercel.app'
 ];
 
